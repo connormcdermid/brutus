@@ -1,0 +1,9 @@
+# manual builds
+build/*
+build/**/*
+build
+
+# CMake with CLion
+cmake-build-debug
+cmake-build-debug/*
+cmake-build-debug/**/*
