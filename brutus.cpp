@@ -76,70 +76,19 @@ void out(int out, string filename="stdout") {
  * @return 0 on successful completion -- a positive number otherwise
  */
 int main(int argc, char** argv) {
-    //argument handling
-    string outputfile = "stdout";
-    string searchword;
-    if (argc < 2 || argc == 4 || argc > 5) {
-        cout << "Usage: brutus <cipherfile> [searchword] [-o outputfile]" << endl;
-        exit(1);
-    }
-    if (argc == 5 && strcmp(argv[3], "-o") == 0) {
-        outputfile = argv[4];
-        searchword = argv[2];
-    }
-    if (argc == 3) {
-        searchword = argv[2];
-    }
+   cxxopts::Options options("Brutus", "A simple monoalphabetic cipher brute force program.");
+   options.add_options()
+           ("v,version", "Print program version")
+           ("o,out", "specify an output file", cxxopts::value<std::string>()->default_value(""))
+           ("c,caesar", "Caesar cipher", cxxopts::value<bool>()->default_value("true"))
+           ("k, key", "Specify a specific key(s) to try", cxxopts::value<std::vector<std::string>>())
+           ("ciphertext", "the ciphertext file to operate on", cxxopts::value<std::string>())
+           ;
+   auto result = options.parse(argc, argv);
 
-    if (strcmp(argv[1], "-v") == 0) {
-        cout << "Brutus: version 1.0" << endl;
-        exit(3);
-    }
-
-    ifstream cipherfile;
-    try {
-        cipherfile.open(argv[1]);
-    } catch (std::exception& e) {
-        cout << "Could not open file!" << endl;
-        cerr << e.what() << endl;
-        exit(2);
-    }
-
-    // read from file
-    string cipher;
-    try {
-        getline(cipherfile, cipher);
-    }  catch (std::exception& e) {
-        cout << "Could not read from file!" << endl;
-        cerr << e.what() << endl;
-        exit(5);
-    }
-
-    if (searchword.empty()) {
-        for (int i = 0; i < 26; i++) {
-            out(decipher(cipher, i).append(" "), outputfile);
-            out(i, outputfile);
-        }
-    } else {
-        string tmp;
-        for (int i = 0; i < 26; i++) {
-            tmp = decipher(cipher, i);
-            if (tmp.find(searchword) != std::string::npos) { // if string contains search term
-                // then that's the one we want
-                out(tmp, outputfile);
-                out(i, outputfile);
-                break; // exit loop, we're done
-            }
-        }
-    }
-
-    try {
-        cipherfile.close();
-    } catch (std::exception& e) {
-        cout << "Could not close file!" << endl;
-        cerr << e.what() << endl;
-        exit(4);
-    }
+   if (result["version"].as<bool>()) {
+       
+   }
 
     return 0;
 }
