@@ -83,11 +83,20 @@ int main(int argc, char** argv) {
            ("c,caesar", "Caesar cipher", cxxopts::value<bool>()->default_value("true"))
            ("k, key", "Specify a specific key(s) to try", cxxopts::value<std::vector<std::string>>())
            ("ciphertext", "the ciphertext file to operate on", cxxopts::value<std::string>())
+           ("h,help", "Prints help dialogue")
            ;
+   options.parse_positional("ciphertext");
    auto result = options.parse(argc, argv);
 
    if (result["version"].as<bool>()) {
-       
+       cout << "BRUTUS v0.3" << endl;
+       return 0;
+   }
+
+   if (result["help"].as<bool>()) {
+       cout << "BRUTUS v0.3" << endl;
+       cout << "A quick-and-dirty monoalphabetic cipher brute forcer." << endl;
+       cout << "Usage: brutus cipher_file [options]"
    }
 
     return 0;
